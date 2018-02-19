@@ -6,6 +6,13 @@ namespace No_Long_Distance_Relationships
 {
     public class No_Long_Distance_Relationships : Alert
     {
+        private List<Pawn> allLDRPawns;
+
+        private List<Pawn> AllLDRPawns {
+            get => allLDRPawns = AllPawnsInLongDistanceRelationships();
+            set => allLDRPawns = value;
+        }
+
         private List<PawnRelationDef> loverDefs = new List<PawnRelationDef>()
             { PawnRelationDefOf.Spouse, PawnRelationDefOf.Lover, PawnRelationDefOf.Fiance };
 
@@ -17,22 +24,21 @@ namespace No_Long_Distance_Relationships
 
         public override string GetExplanation()
         {
-            List<Pawn> pawns = AllPawnsInLongDistanceRelationships();
             return string.Format("{0} colonists on this map are in long-distance relationships:\n{1}",
-                pawns.Count, FormatString(pawns));
+                allLDRPawns.Count, FormatString());
         }
 
         public override AlertReport GetReport()
         {
-            return AnyPawnsInLongDistanceRelationships();
+            return AllLDRPawns.NullOrEmpty() ? false : AlertReport.CulpritIs(allLDRPawns[0]);
         }
 
-        private string FormatString(List<Pawn> pawns)
+        private string FormatString()
         {
             string ret = "";
             List<Pawn> listedPawns = new List<Pawn>();
 
-            foreach (Pawn p in pawns) {
+            foreach (Pawn p in allLDRPawns) {
                 if (listedPawns.Contains(p)) {
                     continue;
                 }
@@ -50,18 +56,14 @@ namespace No_Long_Distance_Relationships
             return ret;
         }
 
-        private bool AnyPawnsInLongDistanceRelationships()
-        {
-            return ((List<Pawn>) Find.VisibleMap.mapPawns.FreeColonists).Any(p =>
-                 p.needs.mood.thoughts.memories.Memories.Any(memory =>
-                    memory.GetType() == typeof(Thought_WantToSleepWithSpouseOrLover)));
-        }
-
         private List<Pawn> AllPawnsInLongDistanceRelationships()
         {
-            return ((List<Pawn>) Find.VisibleMap.mapPawns.FreeColonists).FindAll(p =>
-                p.needs.mood.thoughts.memories.Memories.Any(memory =>
-                    memory.GetType() == typeof(Thought_WantToSleepWithSpouseOrLover)));
+            return (new List<Pawn>(Find.VisibleMap.mapPawns.FreeColonists)).FindAll(p => {
+                List<Thought> outThoughts = new List<Thought>();
+                p.needs.mood.thoughts.GetAllMoodThoughts(outThoughts);
+                return outThoughts.Any(thought =>
+                    thought.def.thoughtClass == typeof(Thought_WantToSleepWithSpouseOrLover));
+            });
         }
     }
 }
