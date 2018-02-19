@@ -9,9 +9,9 @@ Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "RimWorldWin", "..\..\RimWor
 	ProjectSection(DebuggerProjectSystem) = preProject
 		PortSupplier = 00000000-0000-0000-0000-000000000000
 		Executable = C:\SteamLibrary\SteamApps\common\RimWorld\RimWorldWin.exe
-		RemoteMachine = NICKS-PC
+		RemoteMachine = 
 		StartingDirectory = C:\SteamLibrary\SteamApps\common\RimWorld
-		Arguments = -savedatafolder=debug
+		Arguments = 
 		Environment = Default
 		LaunchingEngine = 00000000-0000-0000-0000-000000000000
 		UseLegacyDebugEngines = No
