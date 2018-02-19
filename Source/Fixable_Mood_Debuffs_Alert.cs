@@ -1,18 +1,18 @@
 ﻿using UnityEngine;
 using Verse;
 
-namespace No_Long_Distance_Relationships
+namespace Fixable_Mood_Debuffs_Alert
 {
-    class No_Long_Distance_Relationships : Mod
+    class Fixable_Mood_Debuffs_Alert : Mod
     {
-        public static No_Long_Distance_Relationship_Settings settings;
+        public static Fixable_Mood_Debuffs_Alert_Settings settings;
 
-        public No_Long_Distance_Relationships(ModContentPack content) : base(content)
+        public Fixable_Mood_Debuffs_Alert(ModContentPack content) : base(content)
         {
-            settings = GetSettings<No_Long_Distance_Relationship_Settings>();
+            settings = GetSettings<Fixable_Mood_Debuffs_Alert_Settings>();
         }
 
-        public override string SettingsCategory() => "PriorityClean";
+        public override string SettingsCategory() => "Fixable Mood Debuffs Alert";
 
         public override void DoSettingsWindowContents(Rect inRect)
         {

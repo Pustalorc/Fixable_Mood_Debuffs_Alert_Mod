@@ -7,8 +7,8 @@
     <ProjectGuid>{D7D21B4A-1DA7-41D8-B202-C58CA8FA62AA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>No_Long_Distance_Relationships</RootNamespace>
-    <AssemblyName>No_Long_Distance_Relationships</AssemblyName>
+    <RootNamespace>Fixable_Mood_Debuffs_Alert</RootNamespace>
+    <AssemblyName>Fixable_Mood_Debuffs_Alert</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -55,8 +55,8 @@
     <None Include="..\Patches\**" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="No_Long_Distance_Relationship_Settings.cs" />
-    <Compile Include="No_Long_Distance_Relationships.cs" />
+    <Compile Include="Fixable_Mood_Debuffs_Alert_Settings.cs" />
+    <Compile Include="Fixable_Mood_Debuffs_Alert.cs" />
     <Compile Include="Unhappy_Pet_Owners_Alert.cs" />
     <Compile Include="No_Long_Distance_Relationships_Alert.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

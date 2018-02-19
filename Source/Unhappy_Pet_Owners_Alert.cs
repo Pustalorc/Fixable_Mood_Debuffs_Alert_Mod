@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Verse;
 
-namespace No_Long_Distance_Relationships
+namespace Fixable_Mood_Debuffs_Alert
 {
     public class Unhappy_Pet_Owners_Alert : Alert
     {
@@ -27,7 +27,7 @@ namespace No_Long_Distance_Relationships
 
         public override AlertReport GetReport()
         {
-            return No_Long_Distance_Relationships.settings.alertOnWrongMaster && !AllUnhappyPawns.NullOrEmpty() ? AlertReport.CulpritIs(allUnhappyPawns[0]) : false;
+            return Fixable_Mood_Debuffs_Alert.settings.alertOnWrongMaster && !AllUnhappyPawns.NullOrEmpty() ? AlertReport.CulpritIs(allUnhappyPawns[0]) : false;
         }
 
         private string FormatString()

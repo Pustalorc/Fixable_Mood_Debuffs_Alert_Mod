@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Verse;
 
-namespace No_Long_Distance_Relationships
+namespace Fixable_Mood_Debuffs_Alert
 {
     public class No_Long_Distance_Relationships_Alert : Alert
     {

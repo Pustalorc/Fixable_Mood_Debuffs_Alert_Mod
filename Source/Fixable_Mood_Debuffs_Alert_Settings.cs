@@ -1,8 +1,8 @@
 ﻿using Verse;
 
-namespace No_Long_Distance_Relationships
+namespace Fixable_Mood_Debuffs_Alert
 {
-    class No_Long_Distance_Relationship_Settings : ModSettings
+    class Fixable_Mood_Debuffs_Alert_Settings : ModSettings
     {
         public bool alertOnWrongMaster = true;
 
