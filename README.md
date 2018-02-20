@@ -14,7 +14,7 @@ fyarn
 ## Download
 - Github (with Source): https://github.com/fyarn/Fixable_Mood_Debuffs_Alert_Mod
 - Direct: https://github.com/fyarn/Fixable_Mood_Debuffs_Alert_Mod/archive/master.zip
-- Steam: http://steamcommunity.com/sharedfiles/itemedittext/?id=1307316672
+- Steam: http://steamcommunity.com/sharedfiles/filedetails/?id=1307316672
 
 ## How to install
 - Unzip the contents and place them in your RimWorld/Mods folder.
