@@ -24,7 +24,7 @@ namespace Fixable_Mood_Debuffs_Alert
 
         public override string GetExplanation()
         {
-            return string.Format("{0} colonists on this map want to sleep together:\n{1}",
+            return string.Format("{0} colonists on this map want to sleep together:\n\n{1}",
                 allLDRPawns.Count, FormatString());
         }
 

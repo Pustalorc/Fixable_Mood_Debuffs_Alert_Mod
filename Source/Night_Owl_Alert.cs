@@ -4,30 +4,30 @@ using Verse;
 
 namespace Fixable_Mood_Debuffs_Alert
 {
-    public class Unhappy_Pet_Owners_Alert : Alert
+    public class Night_Owl_Alert : Alert
     {
-        private List<Pawn> allUnhappyPawns;
+        private List<Pawn> nightOwls;
 
-        private List<Pawn> AllUnhappyPawns {
-            get => allUnhappyPawns = AllPawnsWhoWantToMaster();
-            set => allUnhappyPawns = value;
+        private List<Pawn> NightOwls {
+            get => nightOwls = AllPawnsInLongDistanceRelationships();
+            set => nightOwls = value;
         }
-
-        public Unhappy_Pet_Owners_Alert()
+        
+        public Night_Owl_Alert()
         {
-            defaultLabel = "Pawns want to master their bonded pets";
+            defaultLabel = "Unhappy night owls";
             defaultPriority = AlertPriority.Medium;
         }
 
         public override string GetExplanation()
         {
-            return string.Format("{0} colonists on this map want to master their pets:\n\n{1}",
-                allUnhappyPawns.Count, FormatString());
+            return string.Format("{0} colonists on this map want a better schedule:\n\n{1}",
+                nightOwls.Count, FormatString());
         }
 
         public override AlertReport GetReport()
         {
-            return Fixable_Mood_Debuffs_Alert.settings.alertOnWrongMaster && !AllUnhappyPawns.NullOrEmpty() ? AlertReport.CulpritIs(allUnhappyPawns[0]) : false;
+            return Fixable_Mood_Debuffs_Alert.settings.alertOnNightOwlInDay && !NightOwls.NullOrEmpty() ? AlertReport.CulpritIs(nightOwls[0]) : false;
         }
 
         private string FormatString()
@@ -35,20 +35,20 @@ namespace Fixable_Mood_Debuffs_Alert
             string ret = "";
             List<Pawn> listedPawns = new List<Pawn>();
 
-            foreach (Pawn p in allUnhappyPawns) {
+            foreach (Pawn p in nightOwls) {
                 ret += p.NameStringShort + "\n";
             }
 
             return ret;
         }
 
-        private List<Pawn> AllPawnsWhoWantToMaster()
+        private List<Pawn> AllPawnsInLongDistanceRelationships()
         {
             return (new List<Pawn>(Find.VisibleMap.mapPawns.FreeColonists)).FindAll(p => {
                 List<Thought> outThoughts = new List<Thought>();
                 p.needs.mood.thoughts.GetAllMoodThoughts(outThoughts);
                 return outThoughts.Any(thought =>
-                    thought.def.workerClass == typeof(ThoughtWorker_NotBondedAnimalMaster));
+                    thought.def.workerClass == typeof(ThoughtWorker_IsDayForNightOwl));
             });
         }
     }
