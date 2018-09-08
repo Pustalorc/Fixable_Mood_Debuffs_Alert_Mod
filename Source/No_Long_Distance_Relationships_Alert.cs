@@ -50,7 +50,7 @@ namespace Fixable_Mood_Debuffs_Alert
                 listedPawns.Add(p);
                 listedPawns.Add(lover);
 
-                ret += p.NameStringShort + " - " + lover.NameStringShort + "\n";
+                ret += p.Name.ToStringShort + " - " + lover.Name.ToStringShort + "\n";
             }
 
             return ret;
@@ -58,7 +58,7 @@ namespace Fixable_Mood_Debuffs_Alert
 
         private List<Pawn> AllPawnsInLongDistanceRelationships()
         {
-            return (new List<Pawn>(Find.VisibleMap.mapPawns.FreeColonists)).FindAll(p => {
+            return (new List<Pawn>(Find.CurrentMap.mapPawns.FreeColonists)).FindAll(p => {
                 List<Thought> outThoughts = new List<Thought>();
                 p.needs.mood.thoughts.GetAllMoodThoughts(outThoughts);
                 return outThoughts.Any(thought =>

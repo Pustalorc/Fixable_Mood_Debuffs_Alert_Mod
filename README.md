@@ -4,8 +4,18 @@
 This mod alerts you whenever your colonists are getting easily fixable mood debuffs such as wanting to sleep together or wanting to master their bonded pets.
 
 ## Updates
-Feb 19 2018
+Sep 8 2018
+B19 Update
 
+Apr 15 2018
+Added new alerts!
+- Ascetic with too good of a bedroom
+- Clothed nudist
+- Night owl with a daytime schedule
+- Greedy with a bad bedroom
+- Jealous for another bedroom
+
+Feb 19 2018
 Initial Release
 
 ## Author/Mod Team

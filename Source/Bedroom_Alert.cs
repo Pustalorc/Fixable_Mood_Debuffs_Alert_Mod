@@ -40,7 +40,7 @@ namespace Fixable_Mood_Debuffs_Alert
                     return new List<System.Type>() { typeof(ThoughtWorker_BedroomJealous), typeof(ThoughtWorker_Ascetic), typeof(ThoughtWorker_Greedy) }.Contains(thought.def.workerClass) &&
                         thought.MoodOffset() < 0f;
                 }).ForEach(thought => {
-                    ret += string.Format("{0} ({1}): {2}\n", p.NameStringShort, thought.LabelCap, thought.MoodOffset());
+                    ret += string.Format("{0} ({1}): {2}\n", p.Name.ToStringShort, thought.LabelCap, thought.MoodOffset());
                 });
             }
 
@@ -49,7 +49,7 @@ namespace Fixable_Mood_Debuffs_Alert
 
         private List<Pawn> AllUnhappyPawns()
         {
-            return (new List<Pawn>(Find.VisibleMap.mapPawns.FreeColonists)).FindAll(p => {
+            return (new List<Pawn>(Find.CurrentMap.mapPawns.FreeColonists)).FindAll(p => {
                 List<Thought> outThoughts = new List<Thought>();
                 p.needs.mood.thoughts.GetAllMoodThoughts(outThoughts);
                 return outThoughts.Any(thought => {

@@ -36,7 +36,7 @@ namespace Fixable_Mood_Debuffs_Alert
             List<Pawn> listedPawns = new List<Pawn>();
 
             foreach (Pawn p in allUnhappyPawns) {
-                ret += p.NameStringShort + "\n";
+                ret += p.Name.ToStringShort + "\n";
             }
 
             return ret;
@@ -44,7 +44,7 @@ namespace Fixable_Mood_Debuffs_Alert
 
         private List<Pawn> AllPawnsWhoWantToMaster()
         {
-            return (new List<Pawn>(Find.VisibleMap.mapPawns.FreeColonists)).FindAll(p => {
+            return (new List<Pawn>(Find.CurrentMap.mapPawns.FreeColonists)).FindAll(p => {
                 List<Thought> outThoughts = new List<Thought>();
                 p.needs.mood.thoughts.GetAllMoodThoughts(outThoughts);
                 return outThoughts.Any(thought =>
