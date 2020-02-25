@@ -1,8 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
 	<name>Fixable Mood Debuffs Alert</name>
 	<author>fyarn</author>
-	<targetVersion>1.0.2059</targetVersion>
-    <description>This mod alerts you whenever your colonists who are in a relationship are sleeping in different beds.</description>
+  <packageId>fyarn.FixableMoodDebuffsAlert</packageId>
+  <supportedVersions>
+    <li>1.0</li>
+    <li>1.1</li>
+  </supportedVersions>
+  <description>This mod alerts you whenever your colonists are unhappy about fixable debuffs.</description>
 	<url>https://steamcommunity.com/id/fyarn/myworkshopfiles/?appid=294100</url>
 </ModMetaData>

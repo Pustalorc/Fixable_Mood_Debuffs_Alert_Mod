@@ -4,6 +4,9 @@
 This mod alerts you whenever your colonists are getting easily fixable mood debuffs such as wanting to sleep together or wanting to master their bonded pets.
 
 ## Updates
+Feb 24 2020
+1.1 Compatibility Update
+
 Oct 17 2018
 1.0 Update
 
@@ -20,9 +23,6 @@ Added new alerts!
 
 Feb 19 2018
 Initial Release
-
-## Author/Mod Team
-fyarn
 
 ## Download
 - Github (with Source): https://github.com/fyarn/Fixable_Mood_Debuffs_Alert_Mod

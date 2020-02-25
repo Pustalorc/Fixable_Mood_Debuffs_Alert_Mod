@@ -19,7 +19,7 @@ namespace Fixable_Mood_Debuffs_Alert
             defaultPriority = AlertPriority.Medium;
         }
 
-        public override string GetExplanation()
+        public override TaggedString GetExplanation()
         {
             return string.Format("{0} colonists on this map want to master their pets:\n\n{1}",
                 allUnhappyPawns.Count, FormatString());
