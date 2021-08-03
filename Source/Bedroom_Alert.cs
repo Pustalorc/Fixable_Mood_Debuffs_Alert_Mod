@@ -1,61 +1,75 @@
-﻿using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using JetBrains.Annotations;
+using RimWorld;
 using Verse;
 
-namespace Fixable_Mood_Debuffs_Alert
+namespace Fyarn.FixableMoodDebuffsAlert
 {
-    public class Bedroom_Alert : Alert
+    [UsedImplicitly]
+    public class BedroomAlert : Alert
     {
-        private List<Pawn> pawns;
+        private List<Pawn> m_Pawns;
 
-        private List<Pawn> Pawns {
-            get => pawns = AllUnhappyPawns();
-            set => pawns = value;
+        [UsedImplicitly]
+        private List<Pawn> Pawns
+        {
+            get => m_Pawns = AllUnhappyPawns();
+            set => m_Pawns = value;
         }
-        
-        public Bedroom_Alert()
+
+        public BedroomAlert()
         {
             defaultLabel = "Unhappy with bedrooms";
             defaultPriority = AlertPriority.Medium;
         }
 
+#if V10
+        public override string GetExplanation()
+#else
         public override TaggedString GetExplanation()
+#endif
         {
-            return string.Format("{0} colonists on this map are unhappy with their bedrooms:\n\n{1}",
-                pawns.Count, FormatString());
+            return $"{m_Pawns.Count} colonists on this map are unhappy with their bedrooms:\n\n{FormatString()}";
         }
 
         public override AlertReport GetReport()
         {
-            return Fixable_Mood_Debuffs_Alert.settings.alertOnBedroom && !Pawns.NullOrEmpty() ? AlertReport.CulpritIs(pawns[0]) : false;
+            return FixableMoodDebuffsAlert.Settings.AlertOnBedroom && !Pawns.NullOrEmpty()
+                ? AlertReport.CulpritIs(m_Pawns[0])
+                : false;
         }
 
         private string FormatString()
         {
-            string ret = "";
-            foreach (Pawn p in pawns) {
-                List<Thought> outThoughts = new List<Thought>();
+            var ret = "";
+            foreach (var p in m_Pawns)
+            {
+                var outThoughts = new List<Thought>();
                 p.needs.mood.thoughts.GetAllMoodThoughts(outThoughts);
-                outThoughts.FindAll(thought => {
-                    return new List<System.Type>() { typeof(ThoughtWorker_BedroomJealous), typeof(ThoughtWorker_Ascetic), typeof(ThoughtWorker_Greedy) }.Contains(thought.def.workerClass) &&
-                        thought.MoodOffset() < 0f;
-                }).ForEach(thought => {
-                    ret += string.Format("{0} ({1}): {2}\n", p.Name.ToStringShort, thought.LabelCap, thought.MoodOffset());
-                });
+                outThoughts.FindAll(thought =>
+                    new List<System.Type>
+                    {
+                        typeof(ThoughtWorker_BedroomJealous), typeof(ThoughtWorker_Ascetic),
+                        typeof(ThoughtWorker_Greedy)
+                    }.Contains(thought.def.workerClass) && thought.MoodOffset() < 0f).ForEach(thought =>
+                    ret += $"{p.Name.ToStringShort} ({thought.LabelCap}): {thought.MoodOffset()}\n");
             }
 
             return ret;
         }
 
-        private List<Pawn> AllUnhappyPawns()
+        private static List<Pawn> AllUnhappyPawns()
         {
-            return (new List<Pawn>(Find.CurrentMap.mapPawns.FreeColonists)).FindAll(p => {
-                List<Thought> outThoughts = new List<Thought>();
+            return new List<Pawn>(Find.CurrentMap.mapPawns.FreeColonists).FindAll(p =>
+            {
+                var outThoughts = new List<Thought>();
                 p.needs.mood.thoughts.GetAllMoodThoughts(outThoughts);
-                return outThoughts.Any(thought => {
-                    return new List<System.Type>() { typeof(ThoughtWorker_BedroomJealous), typeof(ThoughtWorker_Ascetic), typeof(ThoughtWorker_Greedy) }.Contains(thought.def.workerClass) &&
-                        thought.MoodOffset() < 0f;
-                });
+                return outThoughts.Any(thought =>
+                    new List<System.Type>
+                    {
+                        typeof(ThoughtWorker_BedroomJealous), typeof(ThoughtWorker_Ascetic),
+                        typeof(ThoughtWorker_Greedy)
+                    }.Contains(thought.def.workerClass) && thought.MoodOffset() < 0f);
             });
         }
     }

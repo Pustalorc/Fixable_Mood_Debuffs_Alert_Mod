@@ -1,50 +1,56 @@
-﻿using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using JetBrains.Annotations;
+using RimWorld;
 using Verse;
 
-namespace Fixable_Mood_Debuffs_Alert
+namespace Fyarn.FixableMoodDebuffsAlert
 {
-    public class No_Long_Distance_Relationships_Alert : Alert
+    [UsedImplicitly]
+    public class NoLongDistanceRelationshipsAlert : Alert
     {
-        private List<Pawn> allLDRPawns;
+        private List<Pawn> m_AllLDRPawns;
 
-        private List<Pawn> AllLDRPawns {
-            get => allLDRPawns = AllPawnsInLongDistanceRelationships();
-            set => allLDRPawns = value;
+        [UsedImplicitly]
+        private List<Pawn> AllLDRPawns
+        {
+            get => m_AllLDRPawns = AllPawnsInLongDistanceRelationships();
+            set => m_AllLDRPawns = value;
         }
 
-        private List<PawnRelationDef> loverDefs = new List<PawnRelationDef>()
-            { PawnRelationDefOf.Spouse, PawnRelationDefOf.Lover, PawnRelationDefOf.Fiance };
+        private readonly List<PawnRelationDef> m_LoverDefs = new List<PawnRelationDef>
+            {PawnRelationDefOf.Spouse, PawnRelationDefOf.Lover, PawnRelationDefOf.Fiance};
 
-        public No_Long_Distance_Relationships_Alert()
+        public NoLongDistanceRelationshipsAlert()
         {
             defaultLabel = "Pawns want to sleep together";
             defaultPriority = AlertPriority.Medium;
         }
 
+#if V10
+        public override string GetExplanation()
+#else
         public override TaggedString GetExplanation()
+#endif
         {
-            return string.Format("{0} colonists on this map want to sleep together:\n\n{1}",
-                allLDRPawns.Count, FormatString());
+            return $"{m_AllLDRPawns.Count} colonists on this map want to sleep together:\n\n{FormatString()}";
         }
 
         public override AlertReport GetReport()
         {
-            return AllLDRPawns.NullOrEmpty() ? false : AlertReport.CulpritIs(allLDRPawns[0]);
+            return AllLDRPawns.NullOrEmpty() ? false : AlertReport.CulpritIs(m_AllLDRPawns[0]);
         }
 
         private string FormatString()
         {
-            string ret = "";
-            List<Pawn> listedPawns = new List<Pawn>();
+            var ret = "";
+            var listedPawns = new List<Pawn>();
 
-            foreach (Pawn p in allLDRPawns) {
-                if (listedPawns.Contains(p)) {
-                    continue;
-                }
+            foreach (var p in m_AllLDRPawns)
+            {
+                if (listedPawns.Contains(p)) continue;
 
-                Pawn lover = p.relations.DirectRelations.Find(
-                    relation => loverDefs.Contains(relation.def)
+                var lover = p.relations.DirectRelations.Find(
+                    relation => m_LoverDefs.Contains(relation.def)
                 ).otherPawn;
 
                 listedPawns.Add(p);
@@ -56,13 +62,15 @@ namespace Fixable_Mood_Debuffs_Alert
             return ret;
         }
 
-        private List<Pawn> AllPawnsInLongDistanceRelationships()
+        private static List<Pawn> AllPawnsInLongDistanceRelationships()
         {
-            return (new List<Pawn>(Find.CurrentMap.mapPawns.FreeColonists)).FindAll(p => {
-                List<Thought> outThoughts = new List<Thought>();
+            return new List<Pawn>(Find.CurrentMap.mapPawns.FreeColonists).FindAll(p =>
+            {
+                var outThoughts = new List<Thought>();
                 p.needs.mood.thoughts.GetAllMoodThoughts(outThoughts);
+
                 return outThoughts.Any(thought =>
-                    thought.def.thoughtClass == typeof(Thought_WantToSleepWithSpouseOrLover));
+                    thought.def.workerClass == typeof(ThoughtWorker_WantToSleepWithSpouseOrLover));
             });
         }
     }

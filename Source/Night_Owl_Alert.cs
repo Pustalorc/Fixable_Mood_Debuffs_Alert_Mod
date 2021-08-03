@@ -1,51 +1,55 @@
-﻿using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
+using RimWorld;
 using Verse;
 
-namespace Fixable_Mood_Debuffs_Alert
+namespace Fyarn.FixableMoodDebuffsAlert
 {
-    public class Night_Owl_Alert : Alert
+    [UsedImplicitly]
+    public class NightOwlAlert : Alert
     {
-        private List<Pawn> nightOwls;
+        private List<Pawn> m_NightOwls;
 
-        private List<Pawn> NightOwls {
-            get => nightOwls = AllPawnsInLongDistanceRelationships();
-            set => nightOwls = value;
+        [UsedImplicitly]
+        private List<Pawn> NightOwls
+        {
+            get => m_NightOwls = AllPawnsInLongDistanceRelationships();
+            set => m_NightOwls = value;
         }
-        
-        public Night_Owl_Alert()
+
+        public NightOwlAlert()
         {
             defaultLabel = "Unhappy night owls";
             defaultPriority = AlertPriority.Medium;
         }
 
+#if V10
+        public override string GetExplanation()
+#else
         public override TaggedString GetExplanation()
+#endif
         {
-            return string.Format("{0} colonists on this map want a better schedule:\n\n{1}",
-                nightOwls.Count, FormatString());
+            return $"{m_NightOwls.Count} colonists on this map want a better schedule:\n\n{FormatString()}";
         }
 
         public override AlertReport GetReport()
         {
-            return Fixable_Mood_Debuffs_Alert.settings.alertOnNightOwlInDay && !NightOwls.NullOrEmpty() ? AlertReport.CulpritIs(nightOwls[0]) : false;
+            return FixableMoodDebuffsAlert.Settings.AlertOnNightOwlInDay && !NightOwls.NullOrEmpty()
+                ? AlertReport.CulpritIs(m_NightOwls[0])
+                : false;
         }
 
         private string FormatString()
         {
-            string ret = "";
-            List<Pawn> listedPawns = new List<Pawn>();
-
-            foreach (Pawn p in nightOwls) {
-                ret += p.Name.ToStringShort + "\n";
-            }
-
-            return ret;
+            return m_NightOwls.Aggregate("", (current, p) => current + p.Name.ToStringShort + "\n");
         }
 
-        private List<Pawn> AllPawnsInLongDistanceRelationships()
+        private static List<Pawn> AllPawnsInLongDistanceRelationships()
         {
-            return (new List<Pawn>(Find.CurrentMap.mapPawns.FreeColonists)).FindAll(p => {
-                List<Thought> outThoughts = new List<Thought>();
+            return new List<Pawn>(Find.CurrentMap.mapPawns.FreeColonists).FindAll(p =>
+            {
+                var outThoughts = new List<Thought>();
                 p.needs.mood.thoughts.GetAllMoodThoughts(outThoughts);
                 return outThoughts.Any(thought =>
                     thought.def.workerClass == typeof(ThoughtWorker_IsDayForNightOwl));

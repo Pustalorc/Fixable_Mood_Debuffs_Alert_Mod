@@ -1,50 +1,55 @@
-﻿using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
+using RimWorld;
 using Verse;
 
-namespace Fixable_Mood_Debuffs_Alert
+namespace Fyarn.FixableMoodDebuffsAlert
 {
-    public class Prosthophobe_Alert : Alert
+    [UsedImplicitly]
+    public class ProsthophobeAlert : Alert
     {
-        private List<Pawn> pawns;
+        private List<Pawn> m_Pawns;
 
-        private List<Pawn> Pawns {
-            get => pawns = UnhappyProsthophobes();
-            set => pawns = value;
+        [UsedImplicitly]
+        private List<Pawn> Pawns
+        {
+            get => m_Pawns = UnhappyProsthophobes();
+            set => m_Pawns = value;
         }
 
-        public Prosthophobe_Alert()
+        public ProsthophobeAlert()
         {
             defaultLabel = "Prosthophobes have bionics";
             defaultPriority = AlertPriority.Medium;
         }
 
+#if V10
+        public override string GetExplanation()
+#else
         public override TaggedString GetExplanation()
+#endif
         {
-            return string.Format("{0} colonists on this map want less advanced prosthetics:\n\n{1}",
-                pawns.Count, FormatString());
+            return $"{m_Pawns.Count} colonists on this map want less advanced prosthetics:\n\n{FormatString()}";
         }
 
         public override AlertReport GetReport()
         {
-            return Fixable_Mood_Debuffs_Alert.settings.alertOnProsthophile && !Pawns.NullOrEmpty() ? AlertReport.CulpritIs(pawns[0]) : false;
+            return FixableMoodDebuffsAlert.Settings.AlertOnProsthophile && !Pawns.NullOrEmpty()
+                ? AlertReport.CulpritIs(m_Pawns[0])
+                : false;
         }
 
         private string FormatString()
         {
-            string ret = "";
-            List<Pawn> listedPawns = new List<Pawn>();
-            foreach (Pawn p in pawns) {
-                ret += p.Name.ToStringShort + "\n";
-            }
-
-            return ret;
+            return m_Pawns.Aggregate("", (current, p) => current + p.Name.ToStringShort + "\n");
         }
 
-        private List<Pawn> UnhappyProsthophobes()
+        private static List<Pawn> UnhappyProsthophobes()
         {
-            return (new List<Pawn>(Find.CurrentMap.mapPawns.FreeColonists)).FindAll(p => {
-                List<Thought> outThoughts = new List<Thought>();
+            return new List<Pawn>(Find.CurrentMap.mapPawns.FreeColonists).FindAll(p =>
+            {
+                var outThoughts = new List<Thought>();
                 p.needs.mood.thoughts.GetAllMoodThoughts(outThoughts);
                 return outThoughts.Any(thought => thought.def == ThoughtDef.Named("ProsthophobeUnhappy"));
             });

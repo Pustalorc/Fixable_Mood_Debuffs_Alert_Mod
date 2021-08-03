@@ -1,51 +1,55 @@
-﻿using RimWorld;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
+using RimWorld;
 using Verse;
 
-namespace Fixable_Mood_Debuffs_Alert
+namespace Fyarn.FixableMoodDebuffsAlert
 {
-    public class Unhappy_Pet_Owners_Alert : Alert
+    [UsedImplicitly]
+    public class UnhappyPetOwnersAlert : Alert
     {
-        private List<Pawn> allUnhappyPawns;
+        private List<Pawn> m_AllUnhappyPawns;
 
-        private List<Pawn> AllUnhappyPawns {
-            get => allUnhappyPawns = AllPawnsWhoWantToMaster();
-            set => allUnhappyPawns = value;
+        [UsedImplicitly]
+        private List<Pawn> AllUnhappyPawns
+        {
+            get => m_AllUnhappyPawns = AllPawnsWhoWantToMaster();
+            set => m_AllUnhappyPawns = value;
         }
 
-        public Unhappy_Pet_Owners_Alert()
+        public UnhappyPetOwnersAlert()
         {
             defaultLabel = "Pawns want to master their bonded pets";
             defaultPriority = AlertPriority.Medium;
         }
 
+#if V10
+        public override string GetExplanation()
+#else
         public override TaggedString GetExplanation()
+#endif
         {
-            return string.Format("{0} colonists on this map want to master their pets:\n\n{1}",
-                allUnhappyPawns.Count, FormatString());
+            return $"{m_AllUnhappyPawns.Count} colonists on this map want to master their pets:\n\n{FormatString()}";
         }
 
         public override AlertReport GetReport()
         {
-            return Fixable_Mood_Debuffs_Alert.settings.alertOnWrongMaster && !AllUnhappyPawns.NullOrEmpty() ? AlertReport.CulpritIs(allUnhappyPawns[0]) : false;
+            return FixableMoodDebuffsAlert.Settings.AlertOnWrongMaster && !AllUnhappyPawns.NullOrEmpty()
+                ? AlertReport.CulpritIs(m_AllUnhappyPawns[0])
+                : false;
         }
 
         private string FormatString()
         {
-            string ret = "";
-            List<Pawn> listedPawns = new List<Pawn>();
-
-            foreach (Pawn p in allUnhappyPawns) {
-                ret += p.Name.ToStringShort + "\n";
-            }
-
-            return ret;
+            return m_AllUnhappyPawns.Aggregate("", (current, p) => current + p.Name.ToStringShort + "\n");
         }
 
-        private List<Pawn> AllPawnsWhoWantToMaster()
+        private static List<Pawn> AllPawnsWhoWantToMaster()
         {
-            return (new List<Pawn>(Find.CurrentMap.mapPawns.FreeColonists)).FindAll(p => {
-                List<Thought> outThoughts = new List<Thought>();
+            return new List<Pawn>(Find.CurrentMap.mapPawns.FreeColonists).FindAll(p =>
+            {
+                var outThoughts = new List<Thought>();
                 p.needs.mood.thoughts.GetAllMoodThoughts(outThoughts);
                 return outThoughts.Any(thought =>
                     thought.def.workerClass == typeof(ThoughtWorker_NotBondedAnimalMaster));

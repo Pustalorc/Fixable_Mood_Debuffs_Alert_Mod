@@ -1,24 +1,23 @@
 ﻿using Verse;
 
-namespace Fixable_Mood_Debuffs_Alert
+namespace Fyarn.FixableMoodDebuffsAlert
 {
-    class Fixable_Mood_Debuffs_Alert_Settings : ModSettings
+    internal sealed class FixableMoodDebuffsAlertSettings : ModSettings
     {
-        public bool alertOnWrongMaster = true;
-        public bool alertOnNightOwlInDay = true;
-        public bool alertOnClothedNudist = true;
-        public bool alertOnProsthophile = true;
-        public bool alertOnBedroom = true;
+        public bool AlertOnWrongMaster = true;
+        public bool AlertOnNightOwlInDay = true;
+        public bool AlertOnClothedNudist = true;
+        public bool AlertOnProsthophile = true;
+        public bool AlertOnBedroom = true;
 
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref alertOnWrongMaster, "alertOnWrongMaster", true);
-            Scribe_Values.Look(ref alertOnNightOwlInDay, "alertOnNightOwlInDay", true);
-            Scribe_Values.Look(ref alertOnClothedNudist, "alertOnClothedNudist", true);
-            Scribe_Values.Look(ref alertOnBedroom, "alertOnBedroom", true);
-            Scribe_Values.Look(ref alertOnProsthophile, "alertOnProsthophile", true);
+            Scribe_Values.Look(ref AlertOnWrongMaster, "alertOnWrongMaster", true);
+            Scribe_Values.Look(ref AlertOnNightOwlInDay, "alertOnNightOwlInDay", true);
+            Scribe_Values.Look(ref AlertOnClothedNudist, "alertOnClothedNudist", true);
+            Scribe_Values.Look(ref AlertOnBedroom, "alertOnBedroom", true);
+            Scribe_Values.Look(ref AlertOnProsthophile, "alertOnProsthophile", true);
         }
     }
 }
-
